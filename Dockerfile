@@ -1,5 +1,7 @@
 FROM ubuntu:18.04
 
+MAINTAINER eyllanesc <e.yllanescucho@gmail.com>
+
 RUN apt-get update && \
     apt-get autoclean
 
@@ -43,13 +45,15 @@ RUN apt-get install -y --no-install-recommends \
         alsa-utils \
         pulseaudio
 
-USER $USERNAME
-
 # setup virtual display
 ENV DISPLAY=:99
 ENV SCREEN=0
 ENV DBUS_SESSION_BUS_ADDRESS=/dev/null
 ENV XDG_RUNTIME_DIR=/run/user/1000
+
+RUN mkdir -p -m 0700 $XDG_RUNTIME_DIR && chown -R $USERNAME:users $XDG_RUNTIME_DIR
+
+USER $USERNAME
 
 # turn this on for verbose qt feedback
 ENV QT_DEBUG_PLUGINS=0
